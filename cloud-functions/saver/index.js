@@ -19,11 +19,22 @@ const ALLOWED_MIME_TYPES = [
 ];
 
 // CORS headers
+// const corsHeaders = {
+//   'Access-Control-Allow-Origin': '*', // TODO: Change to 'https://fakeprofiledetection.github.io'
+//   'Access-Control-Allow-Methods': 'POST, OPTIONS',
+//   'Access-Control-Allow-Headers': 'Content-Type',
+//   'Access-Control-Max-Age': '3600'
+// };
+
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*', // TODO: Change to 'https://fakeprofiledetection.github.io'
+  'Access-Control-Allow-Origin': '*', // TODO: Change back to 'https://fakeprofiledetection.github.io'
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Max-Age': '3600'
+  'Access-Control-Max-Age': '3600',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'X-XSS-Protection': '1; mode=block',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
 };
 
 // Rate limiting store
@@ -49,19 +60,24 @@ function checkRateLimit(clientIP) {
 
 /**
  * Extract user ID from various filename formats:
- * - f_userid_taskid.csv (keystroke data)
- * - i_userid_taskid.txt (Instagram posts)
- * - t_userid_taskid_raw.txt (Twitter posts)
+ * - platform_userid_taskid.csv (platform keystroke data)
+ * - platform_userid_taskid_raw.txt (platform raw text data)
+ * - platform_userid_taskid_metadata.json (platform metadata)
  * - userid_consent.json
  * - userid_demographics.json
- * - f_userid_taskid_metadata.json
+ * - userid_start_study.json
+ * - userid_completion.json
  */
 function extractUserIdFromFilename(filename) {
   console.log('Extracting user ID from filename:', filename);
   
-  // Pattern 1: Platform files - <platform>_<userid>_<taskid>.*
+  // Pattern 1: Platform files - <platform>_<userid>_<taskid>_<.csv | _raw.txt | .metadata.json>
+  // Example: f_1234567890abcdef1234567890abcdef_1.csv
+  // Example: i_1234567890abcdef1234567890abcdef_1_raw.txt
+  // Example: t_1234567890abcdef1234567890abcdef_1_metadata.json
   // Where platform is f (Facebook), i (Instagram), or t (Twitter)
-  const platformPattern = /^[fit]_([a-f0-9]{32})_\d+/;
+  const platformPattern = /^[fit]_([a-f0-9]{32})_[0-9]+_(.*\.(csv|raw\.txt|metadata\.json))$/;
+
   const platformMatch = filename.match(platformPattern);
   if (platformMatch) {
     console.log('Matched platform pattern, user ID:', platformMatch[1]);
@@ -69,7 +85,9 @@ function extractUserIdFromFilename(filename) {
   }
   
   // Pattern 2: Direct user ID files - <userid>_<type>.json
-  const directPattern = /^([a-f0-9]{32})_/;
+  // Example: 1234567890abcdef1234567890abcdef_consent.json
+  // Example: 1234567890abcdef1234567890abcdef_demographics.json
+  const directPattern = /^([a-f0-9]{32})_(consent|demographics|start_study|completion)\.json$/;
   const directMatch = filename.match(directPattern);
   if (directMatch) {
     console.log('Matched direct pattern, user ID:', directMatch[1]);

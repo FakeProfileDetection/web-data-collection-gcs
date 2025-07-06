@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Use this if you make changes to index.js, package.json, or .gcloudignore
+# This script deploys the Google Cloud Function named "saver".
 gcloud functions deploy saver \
   --runtime nodejs20 \
   --trigger-http \
