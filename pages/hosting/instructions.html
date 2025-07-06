@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Instructions</title>
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="../../styles/global.css">
+    
+    <!-- Page-specific Styles -->
+    <style>
+      /* Enhanced instruction styling */
+      .instructions-header {
+        text-align: center;
+        margin-bottom: var(--spacing-2xl);
+      }
+      
+      .instructions-header h1 {
+        color: var(--primary-color);
+        margin-bottom: var(--spacing-sm);
+      }
+      
+      /* Progress indicator */
+      .progress-dots {
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-2xl);
+      }
+      
+      .progress-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--gray-300);
+        transition: all var(--transition-base);
+      }
+      
+      .progress-dot.active {
+        background: var(--primary-color);
+        transform: scale(1.2);
+      }
+      
+      .progress-dot.completed {
+        background: var(--success-color);
+      }
+      
+      /* Instruction steps */
+      .instruction-steps {
+        background: var(--light-gray);
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-xl);
+      }
+      
+      .step {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: var(--spacing-xl);
+        text-align: left;
+      }
+      
+      .step:last-child {
+        margin-bottom: 0;
+      }
+      
+      .step-number {
+        background: var(--primary-color);
+        color: var(--white);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2em;
+        flex-shrink: 0;
+        margin-right: var(--spacing-lg);
+      }
+      
+      .step-content {
+        flex: 1;
+      }
+      
+      .step-content h3 {
+        margin-top: 0;
+        margin-bottom: var(--spacing-sm);
+        color: var(--gray-800);
+      }
+      
+      .step-content p {
+        margin: 0;
+        color: var(--gray-700);
+        line-height: 1.6;
+      }
+      
+      /* Important notes */
+      .important-note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: var(--spacing-md);
+        border-radius: var(--radius-sm);
+        margin-bottom: var(--spacing-xl);
+      }
+      
+      .important-note h4 {
+        margin-top: 0;
+        margin-bottom: var(--spacing-sm);
+        color: #856404;
+      }
+      
+      .important-note p {
+        margin: 0;
+        color: #856404;
+      }
+      
+      /* Ready section */
+      .ready-section {
+        text-align: center;
+        margin-top: var(--spacing-xl);
+      }
+      
+      .ready-section p {
+        font-size: 1.2em;
+        font-weight: 500;
+        color: var(--primary-color);
+        margin-bottom: var(--spacing-lg);
+      }
+      
+      /* Icon styling */
+      .icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto var(--spacing-md);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-container">
+      <div class="content-container wide">
+        <!-- Progress indicator -->
+        <div class="progress-dots">
+          <div class="progress-dot completed"></div>
+          <div class="progress-dot completed"></div>
+          <div class="progress-dot active"></div>
+          <div class="progress-dot"></div>
+        </div>
+
+        <!-- Header -->
+        <div class="instructions-header">
+          <h1>How This Study Works</h1>
+          <p class="text-muted">Please read these instructions carefully before beginning</p>
+        </div>
+
+        <!-- Instruction Steps -->
+        <div class="instruction-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Watch Video Clips</h3>
+              <p>
+                You'll be presented with short video clips on various topics. 
+                Watch each video carefully as you'll be asked to share your 
+                thoughts about them.
+              </p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Post Your Thoughts</h3>
+              <p>
+                After watching a video, click "Next Task" to open a social media 
+                platform where you'll write and post your thoughts about what 
+                you just watched. Make sure to click the "Post" button when done.
+              </p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Complete All Tasks</h3>
+              <p>
+                You'll complete 18 posting tasks total: 3 different videos across 
+                3 platforms (Facebook, Instagram, Twitter), repeated twice. 
+                The videos will repeat, so you don't need to rewatch them unless 
+                you want to.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Important Note -->
+        <div class="important-note">
+          <h4>⚠️ Important:</h4>
+          <p>
+            • This program flows through each task in sequence. The Back button is disabled.<br>
+            • This app is designed to collect keystroke information from a standard keyboard and not a mobile device.<br>
+            • Make sure to complete each task to be entered into the drawing.<br>
+            • You'll see a confirmation page when you've finished all tasks.
+          </p>
+        </div>
+
+        <!-- Ready Section -->
+        <div class="ready-section">
+          <p>Ready to begin? Click the button below to start the tasks!</p>
+          <button class="btn-primary btn-block" id="start-button" onclick="goToTasks()">
+            Start Tasks
+          </button>
+        </div>
+
+        <!-- Message Container -->
+        <div id="message-container"></div>
+      </div>
+    </div>
+
+    <!-- Import shared utilities -->
+    <script src="../../utils/common.js"></script>
+    
+    <!-- Page-specific Scripts -->
+    <script>
+      // Initialize when page loads
+      window.addEventListener('load', function() {
+        console.log('Instructions page loaded');
+        initializePage();
+      });
+
+      function initializePage() {
+        try {
+          // Verify we have a user ID from the previous page
+          const userId = NavigationManager.getQueryParam('user_id');
+          if (!userId) {
+            showMessage('Session not found. Redirecting...', 'error');
+            setTimeout(() => {
+              window.location.href = 'consent.html';
+            }, 2000);
+            return;
+          }
+
+          console.log('User ID verified:', userId);
+          
+          // Store in cookie for consistency
+          SecureCookieManager.setCookie('user_id', userId);
+          
+        } catch (error) {
+          console.error('Failed to initialize instructions page:', error);
+          showMessage('Failed to initialize page. Please try again.', 'error');
+        }
+      }
+
+      function goToTasks() {
+        const startButton = document.getElementById('start-button');
+        
+        try {
+          // Get user ID
+          const userId = NavigationManager.getQueryParam('user_id') || 
+                         SecureCookieManager.getCookie('user_id');
+          
+          if (!userId) {
+            showMessage('User ID not found. Please start from the beginning.', 'error');
+            return;
+          }
+
+          // Show loading state
+          startButton.disabled = true;
+          startButton.innerHTML = '<span class="spinner"></span> Loading...';
+
+          console.log('Navigating to tasks with user ID:', userId);
+          
+          // Navigate to tasks page
+          NavigationManager.navigateWithUserId('tasks.html', userId);
+
+        } catch (error) {
+          console.error('Failed to navigate to tasks:', error);
+          showMessage('Failed to start tasks. Please try again.', 'error');
+          
+          // Reset button
+          startButton.disabled = false;
+          startButton.innerHTML = 'Start Tasks';
+        }
+      }
+
+      function showMessage(message, type) {
+        const container = document.getElementById('message-container');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `${type}-message mt-2`;
+        messageDiv.textContent = message;
+        container.appendChild(messageDiv);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => messageDiv.remove(), 5000);
+      }
+
+      // Error handling
+      window.addEventListener('unhandledrejection', function(event) {
+        console.error('Unhandled promise rejection:', event.reason);
+        showMessage('An unexpected error occurred. Please try again.', 'error');
+      });
+    </script>
+  </body>
+</html>
