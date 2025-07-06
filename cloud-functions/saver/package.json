@@ -1,0 +1,13 @@
+{
+  "name": "saver-function",
+  "version": "1.0.0",
+  "description": "Google Cloud Function for handling file uploads to Cloud Storage",
+  "main": "index.js",
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.7.0",
+    "busboy": "^1.6.0"
+  }
+}
