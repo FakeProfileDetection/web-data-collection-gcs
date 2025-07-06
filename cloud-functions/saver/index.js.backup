@@ -47,39 +47,6 @@ function checkRateLimit(clientIP) {
   return true;
 }
 
-/**
- * Extract user ID from various filename formats:
- * - f_userid_taskid.csv (keystroke data)
- * - i_userid_taskid.txt (Instagram posts)
- * - t_userid_taskid_raw.txt (Twitter posts)
- * - userid_consent.json
- * - userid_demographics.json
- * - f_userid_taskid_metadata.json
- */
-function extractUserIdFromFilename(filename) {
-  console.log('Extracting user ID from filename:', filename);
-  
-  // Pattern 1: Platform files - <platform>_<userid>_<taskid>.*
-  // Where platform is f (Facebook), i (Instagram), or t (Twitter)
-  const platformPattern = /^[fit]_([a-f0-9]{32})_\d+/;
-  const platformMatch = filename.match(platformPattern);
-  if (platformMatch) {
-    console.log('Matched platform pattern, user ID:', platformMatch[1]);
-    return platformMatch[1];
-  }
-  
-  // Pattern 2: Direct user ID files - <userid>_<type>.json
-  const directPattern = /^([a-f0-9]{32})_/;
-  const directMatch = filename.match(directPattern);
-  if (directMatch) {
-    console.log('Matched direct pattern, user ID:', directMatch[1]);
-    return directMatch[1];
-  }
-  
-  console.log('No user ID pattern matched');
-  return null;
-}
-
 exports.saver = async (req, res) => {
   const startTime = Date.now();
   
@@ -125,7 +92,7 @@ exports.saver = async (req, res) => {
     
     console.log(`Raw body length: ${buffer.length} bytes`);
     
-    // Parse multipart form data
+    // Parse multipart form data manually
     const result = await parseMultipartData(buffer, req.headers);
     
     if (!result.file) {
@@ -149,21 +116,21 @@ exports.saver = async (req, res) => {
       throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
     }
     
-    // Extract user ID from filename
-    const userId = extractUserIdFromFilename(result.file.filename);
-    if (!userId) {
-      console.error('Could not extract user ID from filename:', result.file.filename);
-      throw new Error('Invalid filename format - could not extract user ID');
+    // Extract user ID
+    const userIdMatch = result.file.filename.match(/^([a-f0-9]{32})_/);
+    if (!userIdMatch) {
+      throw new Error('Invalid filename - missing user ID prefix');
     }
     
-    // Generate GCS filename - keep original structure but add timestamp prefix
+    const userId = userIdMatch[1];
+    
+    // Generate GCS filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const hash = crypto.createHash('sha256')
       .update(userId + result.file.filename + Date.now())
       .digest('hex')
       .substring(0, 8);
     
-    // Preserve original filename in GCS path
     const gcsFileName = `${UPLOAD_PREFIX}${timestamp}_${hash}_${result.file.filename}`;
     
     console.log('Uploading to GCS:', gcsFileName);
@@ -189,7 +156,6 @@ exports.saver = async (req, res) => {
     const publicUrl = `https://storage.googleapis.com/${BUCKET_NAME}/${gcsFileName}`;
     const processingTime = Date.now() - startTime;
     
-    // Return response matching Netlify format
     res.status(200).json({
       success: true,
       url: publicUrl,
@@ -212,8 +178,7 @@ exports.saver = async (req, res) => {
     } else if (
       error.message.includes('Validation failed') ||
       error.message.includes('No file found') ||
-      error.message.includes('Invalid filename') ||
-      error.message.includes('could not extract user ID')
+      error.message.includes('Invalid filename')
     ) {
       statusCode = 400;
       userMessage = error.message;
@@ -227,12 +192,13 @@ exports.saver = async (req, res) => {
   }
 };
 
-// Parse multipart form data
+// Parse multipart form data manually
 async function parseMultipartData(buffer, headers) {
   return new Promise((resolve, reject) => {
     const result = { fields: {}, file: null };
     
     try {
+      // Create a busboy instance
       const bb = busboy({ 
         headers: headers,
         limits: {
@@ -300,7 +266,7 @@ function validateFile(fileName, fileBuffer, contentType) {
     errors.push(`File size exceeds limit of ${MAX_FILE_SIZE / 1024 / 1024}MB`);
   }
   
-  // Updated sanitization check - allow underscores and numbers in filename
+  // Sanitization check
   const sanitizedName = fileName.replace(/[^a-zA-Z0-9._-]/g, '');
   if (sanitizedName !== fileName) {
     errors.push('File name contains invalid characters');
@@ -326,7 +292,7 @@ function validateFile(fileName, fileBuffer, contentType) {
     errors.push(`File type not allowed. Allowed types: ${ALLOWED_MIME_TYPES.join(', ')}`);
   }
   
-  // Validate JSON content
+  // Validate JSON
   if (contentType === 'application/json') {
     try {
       JSON.parse(fileBuffer.toString());

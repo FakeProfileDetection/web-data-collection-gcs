@@ -1,30 +1,173 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>GCS Upload Test - All File Types</title>
+</head>
 <body>
-<h2>Test Cloud Function - Simple</h2>
-<button onclick="testSimple()">Test with Hardcoded Data</button>
-<pre id="result"></pre>
-<script>
-async function testSimple() {
-  // Create a test file
-  const content = "Test content from browser";
-  const blob = new Blob([content], { type: 'text/plain' });
-  
-  const formData = new FormData();
-  formData.append('file', blob, 'a1b2c3d4e5f6789012345678901234567_test.txt');
-  
-  try {
-    const response = await fetch('https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver', {
-      method: 'POST',
-      body: formData
-    });
+    <h2>Test Cloud Function - All File Types</h2>
     
-    const result = await response.json();
-    document.getElementById('result').textContent = JSON.stringify(result, null, 2);
-  } catch (error) {
-    document.getElementById('result').textContent = 'Error: ' + error.message;
-  }
-}
-</script>
+    <div>
+        <label>Test Type:</label><br>
+        <select id="testType" onchange="updateContent()">
+            <option value="consent">Consent JSON</option>
+            <option value="demographics">Demographics JSON</option>
+            <option value="fb_keystroke">Facebook Keystroke CSV</option>
+            <option value="ig_keystroke">Instagram Keystroke CSV</option>
+            <option value="tw_keystroke">Twitter Keystroke CSV</option>
+            <option value="fb_post">Facebook Post TXT</option>
+            <option value="ig_post">Instagram Post TXT</option>
+            <option value="tw_post">Twitter Post TXT</option>
+            <option value="fb_metadata">Facebook Metadata JSON</option>
+        </select>
+    </div>
+    
+    <div style="margin-top: 10px;">
+        <label>File content:</label><br>
+        <textarea id="content" rows="10" cols="70"></textarea>
+    </div>
+    
+    <div style="margin-top: 10px;">
+        <button onclick="testUpload()">Test Upload</button>
+    </div>
+    
+    <h3>Response:</h3>
+    <pre id="result" style="background: #f0f0f0; padding: 10px; min-height: 100px;"></pre>
+
+    <script>
+    // User ID for testing
+    const TEST_USER_ID = 'a1b2c3d4e5f6789012345678901234567';
+    const TEST_TASK_ID = '0';
+    
+    // Sample content for different file types
+    const sampleContent = {
+        consent: {
+            content: JSON.stringify({
+                consented: "Yes",
+                userId: TEST_USER_ID,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            }, null, 2),
+            filename: `${TEST_USER_ID}_consent.json`,
+            type: 'application/json'
+        },
+        demographics: {
+            content: JSON.stringify({
+                email: "test@example.com",
+                gender: "male",
+                age: "25_34",
+                handedness: "right",
+                education: "bachelor",
+                consent_email_for_future: true,
+                submission_timestamp: new Date().toISOString()
+            }, null, 2),
+            filename: `${TEST_USER_ID}_demographics.json`,
+            type: 'application/json'
+        },
+        fb_keystroke: {
+            content: 'Press or Release,Key,Time\nP,h,1751815551976\nR,h,1751815552076\nP,e,1751815552176\nR,e,1751815552276\nP,l,1751815552376\nR,l,1751815552476\nP,l,1751815552576\nR,l,1751815552676\nP,o,1751815552776\nR,o,1751815552876',
+            filename: `f_${TEST_USER_ID}_${TEST_TASK_ID}.csv`,
+            type: 'text/csv'
+        },
+        ig_keystroke: {
+            content: 'Press or Release,Key,Time\nP,t,1751815551976\nR,t,1751815552076\nP,e,1751815552176\nR,e,1751815552276\nP,s,1751815552376\nR,s,1751815552476\nP,t,1751815552576\nR,t,1751815552676',
+            filename: `i_${TEST_USER_ID}_${TEST_TASK_ID}.csv`,
+            type: 'text/csv'
+        },
+        tw_keystroke: {
+            content: 'Press or Release,Key,Time\nP,t,1751815551976\nR,t,1751815552076\nP,w,1751815552176\nR,w,1751815552276\nP,e,1751815552376\nR,e,1751815552476\nP,e,1751815552576\nR,e,1751815552676\nP,t,1751815552776\nR,t,1751815552876',
+            filename: `t_${TEST_USER_ID}_${TEST_TASK_ID}.csv`,
+            type: 'text/csv'
+        },
+        fb_post: {
+            content: 'This is a test Facebook post content that simulates what a user might write after watching a video. It contains their thoughts and reactions to the content they just viewed.',
+            filename: `f_${TEST_USER_ID}_${TEST_TASK_ID}_raw.txt`,
+            type: 'text/plain'
+        },
+        ig_post: {
+            content: 'Test Instagram post - Users share their thoughts here about the video content in a more casual, visual-oriented platform style.',
+            filename: `i_${TEST_USER_ID}_${TEST_TASK_ID}_raw.txt`,
+            type: 'text/plain'
+        },
+        tw_post: {
+            content: 'Test tweet about the video. Short and concise thoughts fitting Twitter\'s character limit and style.',
+            filename: `t_${TEST_USER_ID}_${TEST_TASK_ID}_raw.txt`,
+            type: 'text/plain'
+        },
+        fb_metadata: {
+            content: JSON.stringify({
+                user_id: TEST_USER_ID,
+                platform_id: "0",
+                task_id: TEST_TASK_ID,
+                start_time: Date.now() - 60000,
+                end_time: Date.now(),
+                duration_ms: 60000,
+                platform: "facebook",
+                is_mobile: false,
+                device_type: "desktop",
+                user_agent: navigator.userAgent,
+                screen_size: "1920x1080"
+            }, null, 2),
+            filename: `f_${TEST_USER_ID}_${TEST_TASK_ID}_metadata.json`,
+            type: 'application/json'
+        }
+    };
+    
+    function updateContent() {
+        const type = document.getElementById('testType').value;
+        document.getElementById('content').value = sampleContent[type].content;
+    }
+    
+    // Initialize with consent content
+    updateContent();
+    
+    async function testUpload() {
+        const resultEl = document.getElementById('result');
+        resultEl.textContent = 'Uploading...';
+        
+        try {
+            const type = document.getElementById('testType').value;
+            const testData = sampleContent[type];
+            
+            // Get content from textarea (in case user modified it)
+            const content = document.getElementById('content').value;
+            
+            // Create blob with appropriate type
+            const blob = new Blob([content], { type: testData.type });
+            
+            // Create FormData
+            const formData = new FormData();
+            
+            // Append file with correct filename
+            formData.append('file', blob, testData.filename);
+            
+            console.log('Uploading:', testData.filename);
+            console.log('Content type:', testData.type);
+            console.log('Content length:', content.length);
+            
+            // Send request
+            const response = await fetch('https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            resultEl.textContent = JSON.stringify(result, null, 2);
+            
+            if (result.success) {
+                resultEl.style.color = 'green';
+                console.log('Upload successful! URL:', result.url);
+            } else {
+                resultEl.style.color = 'red';
+                console.error('Upload failed:', result.error);
+            }
+            
+        } catch (error) {
+            console.error('Error:', error);
+            resultEl.textContent = `Error: ${error.message}\n${error.stack}`;
+            resultEl.style.color = 'red';
+        }
+    }
+    </script>
 </body>
 </html>
