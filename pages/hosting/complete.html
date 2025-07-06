@@ -121,6 +121,7 @@
           // Get user ID to log completion
           const userId = NavigationManager.getQueryParam('user_id') || 
                          SecureCookieManager.getCookie('user_id');
+          const savedTaskIndex = parseInt(SecureCookieManager.getCookie('current_task_index') || '0');
           
           if (userId) {
             console.log('Study completed for user:', userId);
@@ -130,7 +131,8 @@
               completion_timestamp: new Date().toISOString(),
               user_id: userId,
               study_version: '1.0',
-              completion_status: 'success'
+              last_task_index: savedTaskIndex,
+              completion_status:  savedTaskIndex >= 17 ? 'success' : 'incomplete',
             };
 
             console.log('Study completion data:', completionData);
