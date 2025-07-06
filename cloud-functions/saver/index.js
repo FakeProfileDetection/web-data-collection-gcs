@@ -67,6 +67,7 @@ function checkRateLimit(clientIP) {
  * - userid_demographics.json
  * - userid_start_study.json
  * - userid_completion.json
+ * - userid_start_time.json
  */
 function extractUserIdFromFilename(filename) {
   console.log('Extracting user ID from filename:', filename);
@@ -87,7 +88,9 @@ function extractUserIdFromFilename(filename) {
   // Pattern 2: Direct user ID files - <userid>_<type>.json
   // Example: 1234567890abcdef1234567890abcdef_consent.json
   // Example: 1234567890abcdef1234567890abcdef_demographics.json
-  const directPattern = /^([a-f0-9]{32})_(consent|demographics|start_study|completion)\.json$/;
+    // Example: 1234567890abcdef1234567890abcdef_start_study.json
+    // Example: 1234567890abcdef1234567890abcdef_start_time.json
+  const directPattern = /^([a-f0-9]{32})_(consent|demographics|start_study|completion|start_time)\.json$/;
   const directMatch = filename.match(directPattern);
   if (directMatch) {
     console.log('Matched direct pattern, user ID:', directMatch[1]);
