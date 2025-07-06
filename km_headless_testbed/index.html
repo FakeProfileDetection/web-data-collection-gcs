@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Supabase Upload via Netlify</title>
+    <title>GCS Upload Test</title>
   </head>
   <body>
     <h1>Upload a File</h1>
@@ -21,7 +21,7 @@
         const formData = new FormData();
         formData.append("file", file);
 
-        const res = await fetch("/.netlify/functions/saver", {
+        const res = await fetch("https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver", {
           method: "POST",
           body: formData,
         });

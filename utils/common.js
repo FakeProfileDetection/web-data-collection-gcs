@@ -156,7 +156,7 @@ class APIClient {
 
       // Upload with timeout and retry logic
       const response = await this.fetchWithRetry(
-        'https://melodious-squirrel-b0930c.netlify.app/.netlify/functions/saver',
+        'https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver',
         {
           method: 'POST',
           body: formData,
@@ -292,7 +292,7 @@ const CONFIG = {
   },
   
   API: {
-    BASE_URL: 'https://melodious-squirrel-b0930c.netlify.app/.netlify/functions/saver',
+     BASE_URL: 'https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver',
     TIMEOUT: 30000,
     MAX_RETRIES: 3
   },
@@ -1025,7 +1025,7 @@ const PlatformSubmissionHandler = {
     fd.append('file', fileBlob, filename);
 
     const res = await fetch(
-      'https://melodious-squirrel-b0930c.netlify.app/.netlify/functions/saver',
+      'https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver',
       { method: 'POST', body: fd }
     );
 

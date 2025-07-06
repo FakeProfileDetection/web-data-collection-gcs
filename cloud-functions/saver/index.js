@@ -27,7 +27,7 @@ const ALLOWED_MIME_TYPES = [
 // };
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*', // TODO: Change back to 'https://fakeprofiledetection.github.io'
+  'Access-Control-Allow-Origin': 'https://fakeprofiledetection.github.io', // Change to '*' for debugging
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Access-Control-Max-Age': '3600',
