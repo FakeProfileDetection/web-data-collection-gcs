@@ -90,7 +90,7 @@ function extractUserIdFromFilename(filename) {
   // Example: 1234567890abcdef1234567890abcdef_demographics.json
     // Example: 1234567890abcdef1234567890abcdef_start_study.json
     // Example: 1234567890abcdef1234567890abcdef_start_time.json
-  const directPattern = /^([a-f0-9]{32})_(consent|demographics|start_study|completion|start_time)\.json$/;
+  const directPattern = /^([a-f0-9]{32})_(consent|demographics|start_study|completion|start_time|survey_code)\.json$/;
   const directMatch = filename.match(directPattern);
   if (directMatch) {
     console.log('Matched direct pattern, user ID:', directMatch[1]);
@@ -185,7 +185,7 @@ exports.saver = async (req, res) => {
       .substring(0, 8);
     
     // Preserve original filename in GCS path
-    const gcsFileName = `${UPLOAD_PREFIX}${timestamp}_${hash}_${result.file.filename}`;
+    const gcsFileName = `${UPLOAD_PREFIX}${hash}_${result.file.filename}`;
     
     console.log('Uploading to GCS:', gcsFileName);
     
