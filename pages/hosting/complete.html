@@ -64,6 +64,40 @@
         margin: 10px 0;
         border: 1px solid #f5c6cb;
       }
+      /* Survey code redirect styling */
+      .survey-redirect {
+        background: #d4edda;
+        color: #155724;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border: 1px solid #c3e6cb;
+        text-align: center;
+      }
+      .countdown-display {
+        font-size: 2em;
+        font-weight: bold;
+        color: #007bff;
+        margin: 10px 0;
+      }
+      .continue-button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 1.1em;
+        cursor: pointer;
+        margin: 10px;
+        transition: background-color 0.3s;
+      }
+      .continue-button:hover {
+        background: #0056b3;
+      }
+      .continue-button:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+      }
     </style>
   </head>
   <body>
@@ -101,7 +135,17 @@
         </p>
       </div>
 
-      <p>
+      <div class="survey-redirect" id="surveyRedirectDiv" style="display: none;">
+        <h3>🎯 Survey Code Ready!</h3>
+        <p>Your survey code is being generated. You will be redirected automatically in:</p>
+        <div class="countdown-display" id="countdownDisplay">20</div>
+        <p>seconds</p>
+        <button class="continue-button" id="continueButton" onclick="redirectToSurveyCode()">
+          🚀 Get Survey Code Now
+        </button>
+      </div>
+
+      <p id="closeMessage">
         <strong>You may now safely close this browser window.</strong>
       </p>
     </div>
@@ -110,15 +154,94 @@
     <script src="../../utils/common.js"></script>
     
     <script>
+      // Enhanced back button prevention
+      function preventBackNavigation() {
+        // Push current state to history
+        history.pushState(null, null, window.location.href);
+        
+        // Prevent back button navigation
+        window.addEventListener('popstate', function(event) {
+          // Push state again to prevent going back
+          history.pushState(null, null, window.location.href);
+          
+          // Show user-friendly message
+          console.log('⚠️ Back navigation prevented - study completion page');
+          
+          // Optional: Show a subtle notification to user
+          showBackPreventionMessage();
+        });
+        
+        // Also prevent on page load
+        window.addEventListener('load', function() {
+          history.pushState(null, null, window.location.href);
+        });
+      }
+      
+      // Show user-friendly back prevention message
+      function showBackPreventionMessage() {
+        // Create a subtle notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #fff3cd;
+          color: #856404;
+          padding: 10px 15px;
+          border-radius: 5px;
+          border: 1px solid #ffeaa7;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          z-index: 1000;
+          font-size: 14px;
+          max-width: 300px;
+        `;
+        notification.textContent = '⚠️ You cannot go back from the completion page';
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 3000);
+      }
+      
+      // Initialize back button prevention
+      preventBackNavigation();
+
       // Initialize when page loads
       window.addEventListener('load', function() {
         console.log('Completion page loaded');
-        logStudyCompletion();
+        checkCompletionAndRedirect();
       });
+
+      async function checkCompletionAndRedirect() {
+        try {
+          const savedTaskIndex = parseInt(SecureCookieManager.getCookie('current_task_index') || '0');
+          const userId = NavigationManager.getQueryParam('user_id') || 
+                         SecureCookieManager.getCookie('user_id');
+          
+          console.log('Task index:', savedTaskIndex, 'User ID:', userId ? 'found' : 'not found');
+          
+          if (savedTaskIndex >= 17 && userId) {
+            console.log('✅ Study completed - showing completion with countdown redirect');
+            showCompletionWithCountdown(userId);
+            return;
+          }
+          
+          // If not completed, show completion page without redirect
+          console.log('❌ Study not completed - showing completion page only');
+          logStudyCompletion();
+        } catch (error) {
+          console.error('Error checking completion status:', error);
+          // Fallback to showing completion page
+          logStudyCompletion();
+        }
+      }
 
       async function logStudyCompletion() {
         try {
-          // Get user ID to log completion
+          // Get user ID and task index (reuse from checkCompletionAndRedirect)
           const userId = NavigationManager.getQueryParam('user_id') || 
                          SecureCookieManager.getCookie('user_id');
           const savedTaskIndex = parseInt(SecureCookieManager.getCookie('current_task_index') || '0');
@@ -126,13 +249,15 @@
           if (userId) {
             console.log('Study completed for user:', userId);
             
-            // Log completion metadata (in production, this would upload to server)
+            // Log completion metadata
             const completionData = {
               completion_timestamp: new Date().toISOString(),
               user_id: userId,
               study_version: '1.0',
               last_task_index: savedTaskIndex,
-              completion_status:  savedTaskIndex >= 17 ? 'success' : 'incomplete',
+              completion_status: savedTaskIndex >= 17 ? 'success' : 'incomplete',
+              survey_code_generated: savedTaskIndex >= 17 ? 'pending' : 'not_applicable',
+              redirect_to_survey_code: savedTaskIndex >= 17
             };
 
             console.log('Study completion data:', completionData);
@@ -155,16 +280,8 @@
               }
             }
 
-            // Optional: Clear sensitive data from browser
-            setTimeout(() => {
-              try {
-                // Clear the user ID cookie after a delay
-                SecureCookieManager.deleteCookie('user_id');
-                console.log('User session cleaned up');
-              } catch (error) {
-                console.error('Failed to clean up session:', error);
-              }
-            }, 30000); // 30 seconds delay
+            // Note: Don't clear user ID cookie here as it's needed for survey code generation
+            // The unified survey-code.html will handle session cleanup after code generation
 
           } else {
             console.log('Completion page reached without user ID');
@@ -183,6 +300,65 @@
 
       window.addEventListener('error', function(event) {
         console.error('JavaScript error on completion page:', event.error);
+      });
+
+      // Survey code redirect functionality
+      let redirectTimer;
+      let currentUserId;
+
+      function showCompletionWithCountdown(userId) {
+        currentUserId = userId;
+        
+        // Hide close message, show redirect section
+        document.getElementById('closeMessage').style.display = 'none';
+        document.getElementById('surveyRedirectDiv').style.display = 'block';
+        
+        // Start countdown
+        let countdown = 10;
+        const countdownEl = document.getElementById('countdownDisplay');
+        const continueButton = document.getElementById('continueButton');
+        
+        redirectTimer = setInterval(() => {
+          countdownEl.textContent = countdown;
+          countdown--;
+          
+          if (countdown < 0) {
+            clearInterval(redirectTimer);
+            redirectToSurveyCode();
+          }
+        }, 1000);
+        
+        // Update button text as countdown progresses
+        setTimeout(() => {
+          if (continueButton) {
+            continueButton.textContent = '⏰ Continue Now (Skip Wait)';
+          }
+        }, 3000);
+      }
+
+      function redirectToSurveyCode() {
+        if (redirectTimer) {
+          clearInterval(redirectTimer);
+        }
+        
+        const continueButton = document.getElementById('continueButton');
+        if (continueButton) {
+          continueButton.disabled = true;
+          continueButton.textContent = '🔄 Redirecting...';
+        }
+        
+        console.log('Redirecting to unified survey code page for user:', currentUserId);
+        
+        // The unified survey-code.html automatically detects MTurk vs regular sessions
+        // No need for separate logic here - just pass the user ID
+        window.location.href = `survey-code.html?user_id=${currentUserId}`;
+      }
+
+      // Clean up timer on page unload
+      window.addEventListener('beforeunload', () => {
+        if (redirectTimer) {
+          clearInterval(redirectTimer);
+        }
       });
     </script>
   </body>

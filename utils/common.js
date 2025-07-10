@@ -1035,3 +1035,148 @@ const PlatformSubmissionHandler = {
   }
 };
 
+/**
+ * MTurk-specific utilities for completion code generation and validation
+ */
+class MTurkManager {
+  /**
+   * Generate a unique MTurk completion code
+   * @param {string} userId - The user's unique identifier
+   * @returns {string} - Generated completion code
+   */
+  static generateCompletionCode(userId) {
+    if (!userId || userId.length < 8) {
+      throw new Error('Invalid user ID for completion code generation');
+    }
+
+    const timestamp = Date.now().toString(36);
+    const randomPart = Math.random().toString(36).substr(2, 6).toUpperCase();
+    const userPrefix = userId.substr(0, 8).toUpperCase();
+    
+    return `${userPrefix}-${timestamp}-${randomPart}`;
+  }
+
+  /**
+   * Validate an MTurk completion code format
+   * @param {string} code - The completion code to validate
+   * @returns {boolean} - True if valid format
+   */
+  static validateCompletionCode(code) {
+    if (!code || typeof code !== 'string') return false;
+    
+    // Format: USER_ID-TIMESTAMP-RANDOM (e.g., A1B2C3D4-K9X2M1-AB3X9F)
+    const codePattern = /^[A-F0-9]{8}-[A-Z0-9]{6}-[A-Z0-9]{6}$/;
+    return codePattern.test(code);
+  }
+
+  /**
+   * Create completion code data object for upload
+   * @param {string} userId - User ID
+   * @param {string} completionCode - Generated completion code
+   * @param {number} taskIndex - Current task index
+   * @returns {Object} - Completion data object
+   */
+  static createCompletionData(userId, completionCode, taskIndex = 17) {
+    return {
+      user_id: userId,
+      completion_code: completionCode,
+      generation_timestamp: new Date().toISOString(),
+      task_completion_index: taskIndex,
+      study_version: '1.0',
+      platform: 'mturk',
+      mturk_worker_id: this.getMTurkWorkerId(),
+      mturk_assignment_id: this.getMTurkAssignmentId(),
+      mturk_hit_id: this.getMTurkHitId()
+    };
+  }
+
+  /**
+   * Extract MTurk worker ID from URL parameters or cookies
+   * @returns {string|null} - Worker ID if available
+   */
+  static getMTurkWorkerId() {
+    return NavigationManager.getQueryParam('workerId') || 
+           NavigationManager.getQueryParam('worker_id') ||
+           SecureCookieManager.getCookie('mturk_worker_id');
+  }
+
+  /**
+   * Extract MTurk assignment ID from URL parameters or cookies
+   * @returns {string|null} - Assignment ID if available
+   */
+  static getMTurkAssignmentId() {
+    return NavigationManager.getQueryParam('assignmentId') || 
+           NavigationManager.getQueryParam('assignment_id') ||
+           SecureCookieManager.getCookie('mturk_assignment_id');
+  }
+
+  /**
+   * Extract MTurk HIT ID from URL parameters or cookies
+   * @returns {string|null} - HIT ID if available
+   */
+  static getMTurkHitId() {
+    return NavigationManager.getQueryParam('hitId') || 
+           NavigationManager.getQueryParam('hit_id') ||
+           SecureCookieManager.getCookie('mturk_hit_id');
+  }
+
+  /**
+   * Store MTurk parameters in cookies for later use
+   * @param {Object} params - URL parameters object
+   */
+  static storeMTurkParams(params) {
+    if (params.workerId || params.worker_id) {
+      SecureCookieManager.setCookie('mturk_worker_id', params.workerId || params.worker_id);
+    }
+    if (params.assignmentId || params.assignment_id) {
+      SecureCookieManager.setCookie('mturk_assignment_id', params.assignmentId || params.assignment_id);
+    }
+    if (params.hitId || params.hit_id) {
+      SecureCookieManager.setCookie('mturk_hit_id', params.hitId || params.hit_id);
+    }
+  }
+
+  /**
+   * Check if current session is from MTurk
+   * @returns {boolean} - True if MTurk parameters are present
+   */
+  static isMTurkSession() {
+    return !!(this.getMTurkWorkerId() || this.getMTurkAssignmentId() || this.getMTurkHitId());
+  }
+
+  /**
+   * Get MTurk completion URL with parameters
+   * @param {string} completionCode - The completion code
+   * @returns {string} - URL for MTurk completion
+   */
+  static getMTurkCompletionUrl(completionCode) {
+    const workerId = this.getMTurkWorkerId();
+    const assignmentId = this.getMTurkAssignmentId();
+    const hitId = this.getMTurkHitId();
+    
+    if (!workerId || !assignmentId || !hitId) {
+      console.warn('Missing MTurk parameters for completion URL');
+      return null;
+    }
+
+    // MTurk external question format
+    return `https://www.mturk.com/mturk/externalSubmit?assignmentId=${assignmentId}&workerId=${workerId}&hitId=${hitId}&completionCode=${encodeURIComponent(completionCode)}`;
+  }
+
+  /**
+   * Navigate to MTurk completion page
+   * @param {string} completionCode - The completion code
+   */
+  static navigateToMTurkCompletion(completionCode) {
+    const completionUrl = this.getMTurkCompletionUrl(completionCode);
+    
+    if (completionUrl) {
+      console.log('Navigating to MTurk completion:', completionUrl);
+      window.location.href = completionUrl;
+    } else {
+      console.error('Cannot generate MTurk completion URL - missing parameters');
+      alert('Please copy your completion code and submit it manually on MTurk.');
+    }
+  }
+}
+
