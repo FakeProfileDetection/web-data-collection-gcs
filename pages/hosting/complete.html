@@ -225,6 +225,8 @@
           
           if (savedTaskIndex >= 17 && userId) {
             console.log('✅ Study completed - showing completion with countdown redirect');
+            // Log completion data first, then show countdown
+            await logStudyCompletion();
             showCompletionWithCountdown(userId);
             return;
           }
@@ -268,12 +270,13 @@
             } else {
               // In production, upload completion data
               try {
+                console.log('📤 Uploading completion data...');
                 const jsonBlob = new Blob([JSON.stringify(completionData, null, 2)], {
                   type: "application/json",
                 });
                 
                 await APIClient.uploadFile(jsonBlob, `${userId}_completion.json`, userId);
-                console.log('✅ Completion data uploaded');
+                console.log('✅ Completion data uploaded successfully');
               } catch (error) {
                 console.error('❌ Failed to upload completion data:', error);
                 // Don't show error to user on completion page - study is done
