@@ -252,7 +252,7 @@
         }
       }
 
-      function goToTasks() {
+      async function goToTasks() {
         const startButton = document.getElementById('start-button');
         
         try {
@@ -267,21 +267,48 @@
 
           // Show loading state
           startButton.disabled = true;
-          startButton.innerHTML = '<span class="spinner"></span> Loading...';
+          startButton.innerHTML = '<span class="spinner"></span> Processing...';
 
-          console.log('Navigating to tasks with user ID:', userId);
+          console.log('Starting study tasks for user ID:', userId);
           
+          // Upload start study data
+          await uploadStartStudyData(userId);
+
           // Navigate to tasks page
           NavigationManager.navigateWithUserId('tasks.html', userId);
 
         } catch (error) {
-          console.error('Failed to navigate to tasks:', error);
+          console.error('Failed to start tasks:', error);
           showMessage('Failed to start tasks. Please try again.', 'error');
           
           // Reset button
           startButton.disabled = false;
           startButton.innerHTML = 'Start Tasks';
         }
+      }
+
+      async function uploadStartStudyData(userId) {
+        console.log('Uploading start study data...');
+        
+        const startStudyData = {
+          study_started: true,
+          user_id: userId,
+          start_timestamp: new Date().toISOString(),
+          instructions_read: true,
+          ready_for_tasks: true,
+          user_agent: navigator.userAgent,
+          url: window.location.href
+        };
+
+        const jsonBlob = new Blob([JSON.stringify(startStudyData, null, 2)], {
+          type: "application/json",
+        });
+
+        const fileName = `${userId}_start_study.json`;
+        
+        const result = await APIClient.uploadFile(jsonBlob, fileName, userId);
+        console.log('✅ Start study data uploaded:', result.fileName);
+        return result;
       }
 
       function showMessage(message, type) {
