@@ -144,7 +144,7 @@ impl KeystrokeCapture {
         }
         
         let min_delta = deltas.iter().fold(f64::INFINITY, |a, &b| a.min(b));
-        let max_delta = deltas.iter().fold(0.0, |a, &b| a.max(b));
+        let max_delta = deltas.iter().fold(0.0, |a: f64, &b: &f64| a.max(b));
         
         Ok(format!("Timing test - Min delta: {:.3}ms, Max delta: {:.3}ms", min_delta, max_delta))
     }
