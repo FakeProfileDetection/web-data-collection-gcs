@@ -177,15 +177,8 @@ exports.saver = async (req, res) => {
       throw new Error('Invalid filename format - could not extract user ID');
     }
     
-    // Generate GCS filename - keep original structure but add timestamp prefix
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const hash = crypto.createHash('sha256')
-      .update(userId + result.file.filename + Date.now())
-      .digest('hex')
-      .substring(0, 8);
-    
-    // Preserve original filename in GCS path
-    const gcsFileName = `${UPLOAD_PREFIX}${hash}_${result.file.filename}`;
+    // Generate GCS filename - preserve original filename without hash prefix
+    const gcsFileName = `${UPLOAD_PREFIX}${result.file.filename}`;
     
     console.log('Uploading to GCS:', gcsFileName);
     
