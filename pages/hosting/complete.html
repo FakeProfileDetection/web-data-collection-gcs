@@ -259,7 +259,12 @@
               last_task_index: savedTaskIndex,
               completion_status: savedTaskIndex >= 17 ? 'success' : 'incomplete',
               survey_code_generated: savedTaskIndex >= 17 ? 'pending' : 'not_applicable',
-              redirect_to_survey_code: savedTaskIndex >= 17
+              redirect_to_survey_code: savedTaskIndex >= 17,
+              // Add MTurk information if available
+              mturk_worker_id: MTurkManager.getMTurkWorkerId(),
+              mturk_assignment_id: MTurkManager.getMTurkAssignmentId(),
+              mturk_hit_id: MTurkManager.getMTurkHitId(),
+              is_mturk_session: MTurkManager.isMTurkSession()
             };
 
             console.log('Study completion data:', completionData);
