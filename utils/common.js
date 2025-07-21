@@ -464,16 +464,28 @@ const PlatformSubmissionHandler = {
     // Check if WASM is available
     if (window.wasmKeystrokeManager) {
       try {
+        console.log('Attempting to initialize WASM...');
         await window.wasmKeystrokeManager.initialize();
         this.wasmCapture = window.wasmKeystrokeManager;
         this.useWASM = true;
-        console.log('✅ Using WASM for high-performance keystroke capture');
+        console.log('✅ WASM initialized successfully');
+        
+        // Test WASM functionality
+        const testCount = this.wasmCapture.getEventCount();
+        console.log('WASM test - event count:', testCount);
       } catch (error) {
-        console.error('Failed to initialize WASM, falling back to JavaScript:', error);
+        console.error('❌ WASM initialization failed:', error);
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack,
+          wasmManager: window.wasmKeystrokeManager
+        });
         this.useWASM = false;
       }
     } else {
-      console.log('WASM not available, using JavaScript keystroke capture');
+      console.warn('⚠️ wasmKeystrokeManager not found on window object');
+      console.log('Available on window:', Object.keys(window).filter(k => k.includes('wasm')));
+      this.useWASM = false;
     }
 
     // Only attach keylogger if not already attached
@@ -706,7 +718,7 @@ const PlatformSubmissionHandler = {
       };
       
       document.addEventListener('keydown', (e) => captureEvent(e, 0), { passive: false });
-      document.addEventListener('keyup', (e) => captureEvent(e, 1), { passive: true });
+      document.addEventListener('keyup', (e) => captureEvent(e, 1), { passive: false });
     }
   },
 

@@ -77,20 +77,15 @@ function extractUserIdFromFilename(filename) {
   // Example: i_1234567890abcdef1234567890abcdef_1_raw.txt
   // Example: t_1234567890abcdef1234567890abcdef_1_metadata.json
   // Where platform is f (Facebook), i (Instagram), or t (Twitter)
-  const platformPattern = /^[fit]_([a-f0-9]{32})_[0-9]+(.*\.(csv|_raw\.txt|_metadata\.json))$/;
-
+  // const platformPattern = /^[fit]_([a-f0-9]{32})_[0-9]+(.*\.(csv|_raw\.txt|_metadata\.json))$/;
   const platformMatch = filename.match(platformPattern);
   if (platformMatch) {
     console.log('Matched platform pattern, user ID:', platformMatch[1]);
     return platformMatch[1];
   }
   
-  // Pattern 2: Direct user ID files - <userid>_<type>.json
-  // Example: 1234567890abcdef1234567890abcdef_consent.json
-  // Example: 1234567890abcdef1234567890abcdef_demographics.json
-    // Example: 1234567890abcdef1234567890abcdef_start_study.json
-    // Example: 1234567890abcdef1234567890abcdef_start_time.json
-  const directPattern = /^([a-f0-9]{32})_(consent|demographics|start_study|completion|start_time|survey_code)\.json$/;
+  // Pattern 2: Direct user ID files
+  const directPattern = /^([a-f0-9]{32})_(consent|demographics|start_study|completion|start_time|survey_code|mturk_completion_code)\.json$/;
   const directMatch = filename.match(directPattern);
   if (directMatch) {
     console.log('Matched direct pattern, user ID:', directMatch[1]);
