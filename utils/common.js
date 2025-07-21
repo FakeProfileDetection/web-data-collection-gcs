@@ -692,6 +692,7 @@ const PlatformSubmissionHandler = {
         
         // Handle Enter key
         if (e.key === "Enter" && e.target.id === this.config.textInputId && !e.shiftKey) {
+          console.log('Enter key pressed, inserting newline');
           e.preventDefault();
           requestAnimationFrame(() => {
             const textarea = e.target;
