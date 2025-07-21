@@ -78,6 +78,9 @@ function extractUserIdFromFilename(filename) {
   // Example: t_1234567890abcdef1234567890abcdef_1_metadata.json
   // Where platform is f (Facebook), i (Instagram), or t (Twitter)
   // const platformPattern = /^[fit]_([a-f0-9]{32})_[0-9]+(.*\.(csv|_raw\.txt|_metadata\.json))$/;
+  
+  const platformPattern = /^[fit]_([a-f0-9]{32})_[0-9]+(?:\.csv|_raw\.txt|_metadata\.json)$/;
+
   const platformMatch = filename.match(platformPattern);
   if (platformMatch) {
     console.log('Matched platform pattern, user ID:', platformMatch[1]);
