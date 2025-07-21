@@ -271,17 +271,17 @@ const CONFIG = {
     FACEBOOK: {
       id: 0,
       name: 'Facebook',
-      url: 'https://fakeprofiledetection.github.io/web-data-collection/pages/fake_pages/Facebook-Clone/index.html'
+      url: 'https://fakeprofiledetection.github.io/web-data-collection-gcs/pages/fake_pages/Facebook-Clone/index.html'
     },
     INSTAGRAM: {
       id: 1,
       name: 'Instagram', 
-      url: 'https://fakeprofiledetection.github.io/web-data-collection/pages/fake_pages/instagram-clone/index.html'
+      url: 'https://fakeprofiledetection.github.io/web-data-collection-gcs/pages/fake_pages/instagram-clone/index.html'
     },
     TWITTER: {
       id: 2,
       name: 'Twitter',
-      url: 'https://fakeprofiledetection.github.io/web-data-collection/pages/fake_pages/twitter-clone/index.html'
+      url: 'https://fakeprofiledetection.github.io/web-data-collection-gcs/pages/fake_pages/twitter-clone/index.html'
     }
   },
   
@@ -892,7 +892,7 @@ const PlatformSubmissionHandler = {
       console.error("No return URL found, using fallback");
       
       if (urlParams.user_id && urlParams.task_id) {
-        const fallbackUrl = `/web-data-collection/pages/hosting/tasks.html?user_id=${urlParams.user_id}&completed_task=${urlParams.task_id}`;
+        const fallbackUrl = `/web-data-collection-gcs/pages/hosting/tasks.html?user_id=${urlParams.user_id}&completed_task=${urlParams.task_id}`;
         console.log("Using fallback URL:", fallbackUrl);
         // window.location.replace(fallbackUrl);
         window.location.replace(fallbackUrl);
