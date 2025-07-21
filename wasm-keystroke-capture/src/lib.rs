@@ -1,5 +1,5 @@
 use wasm_bindgen::prelude::*;
-use web_sys::{Performance, Window};
+// use web_sys::Performance;
 
 #[wasm_bindgen]
 pub struct KeystrokeCapture {
@@ -144,7 +144,8 @@ impl KeystrokeCapture {
         }
         
         let min_delta = deltas.iter().fold(f64::INFINITY, |a, &b| a.min(b));
-        let max_delta = deltas.iter().fold(0.0, |a, &b| a.max(b));
+        let max_delta = deltas.iter().fold(0.0f64, |a, &b| a.max(b));
+
         
         Ok(format!("Timing test - Min delta: {:.3}ms, Max delta: {:.3}ms", min_delta, max_delta))
     }
