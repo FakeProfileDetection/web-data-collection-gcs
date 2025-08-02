@@ -218,6 +218,10 @@
           📋 Copy Code
         </button>
 
+        <button class="copy-button" id="saveLocallyButton" onclick="saveCodeLocally()" style="display: none;">
+          💾 Save Code Locally
+        </button>
+
         <button class="copy-button mturk-submit-button" id="submitToMTurkButton" onclick="submitToMTurk()" style="display: none;">
           🚀 Submit to MTurk
         </button>
@@ -341,6 +345,7 @@
         const instructionsList = document.getElementById('instructionsList');
         const warningDiv = document.getElementById('warningDiv');
         const copyButton = document.getElementById('copyButton');
+        const saveLocallyButton = document.getElementById('saveLocallyButton');
         const submitButton = document.getElementById('submitToMTurkButton');
 
         if (isMTurkSession || isTestMode) {
@@ -358,6 +363,7 @@
           instructionsList.innerHTML = `
             <li><strong>Option 1 (Recommended):</strong> Click "Submit to MTurk" button above for automatic submission</li>
             <li><strong>Option 2 (Manual):</strong> Copy the completion code and paste it on the MTurk HIT page</li>
+            <li><strong>(Backup):</strong> Click "Save Code Locally" to download the code as a text file</li>
             <li>Return to the MTurk HIT page</li>
             <li>Paste the completion code in the designated field</li>
             <li>Click "Submit" to complete the HIT</li>
@@ -366,6 +372,18 @@
           
           warningDiv.innerHTML = '⚠️ <strong>Important:</strong> You must submit this completion code on MTurk to receive payment. Do not close this page until you have copied the code.';
           copyButton.textContent = '📋 Copy Completion Code';
+          saveLocallyButton.textContent = '💾 Save Code Locally';
+          
+          // Add payment reassurance for MTurk
+          const paymentReassurance = document.createElement('div');
+          paymentReassurance.className = 'alert alert-success';
+          paymentReassurance.style.cssText = 'background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #c3e6cb;';
+          paymentReassurance.innerHTML = `
+            <strong>💳 Payment Assurance:</strong> If you encounter any technical issues with code submission, 
+            don't worry! We will process your payment based on the completion data we have received. 
+            Simply contact us at <strong>irentala@myharrisburgu.com</strong> with your completion code for assistance.
+          `;
+          warningDiv.parentNode.insertBefore(paymentReassurance, warningDiv.nextSibling);
           
           // Show MTurk submit button if available
           if (isMTurkSession || isTestMode) {
@@ -385,13 +403,26 @@
           // Update instructions for regular survey
           instructionsList.innerHTML = `
             <li><strong>Copy the code above</strong> using the copy button</li>
+            <li><strong>Save the code locally</strong> using the "Save Code Locally" button as backup</li>
             <li>Use this code to complete your submission on the platform where you found this study</li>
             <li>This code proves you completed the entire study</li>
           `;
           
           warningDiv.innerHTML = '⚠️ <strong>Important:</strong> Please copy this code and use it to complete your submission on the platform where you found this study. This code proves you completed the entire study.';
           copyButton.textContent = '📋 Copy Code';
+          saveLocallyButton.textContent = '💾 Save Code Locally';
           submitButton.style.display = 'none';
+          
+          // Add completion reassurance for regular surveys
+          const completionReassurance = document.createElement('div');
+          completionReassurance.className = 'alert alert-success';
+          completionReassurance.style.cssText = 'background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #c3e6cb;';
+          completionReassurance.innerHTML = `
+            <strong>✅ Completion Assurance:</strong> If you encounter any technical issues with code submission, 
+            don't worry! We have received your completion data and will process your participation accordingly. 
+            Simply contact us at <strong>irentala@myharrisburgu.com</strong> with your completion code for assistance.
+          `;
+          warningDiv.parentNode.insertBefore(completionReassurance, warningDiv.nextSibling);
         }
       }
 
@@ -401,6 +432,7 @@
           const errorDiv = document.getElementById('errorDiv');
           const codeDiv = document.getElementById('codeDiv');
           const copyButton = document.getElementById('copyButton');
+          const saveLocallyButton = document.getElementById('saveLocallyButton');
           const successDiv = document.getElementById('successDiv');
 
           // Show loading
@@ -408,6 +440,7 @@
           errorDiv.style.display = 'none';
           codeDiv.style.display = 'none';
           copyButton.style.display = 'none';
+          saveLocallyButton.style.display = 'none';
           successDiv.style.display = 'none';
 
           // Get user ID and verify task completion
@@ -443,6 +476,7 @@
           loadingDiv.style.display = 'none';
           codeDiv.style.display = 'block';
           copyButton.style.display = 'inline-block';
+          saveLocallyButton.style.display = 'inline-block';
           document.getElementById('codeText').textContent = generatedCode;
           document.getElementById('generationTime').textContent = new Date().toLocaleString();
 
@@ -521,6 +555,82 @@
         }
         
         document.body.removeChild(textArea);
+      }
+
+      function saveCodeLocally() {
+        const saveButton = document.getElementById('saveLocallyButton');
+        const codeText = document.getElementById('codeText').textContent;
+        const generationTime = document.getElementById('generationTime').textContent;
+        const headerTitle = document.getElementById('headerTitle').textContent;
+        
+        // Create a professional text file with metadata
+        const fileContent = `SURVEY COMPLETION CODE
+=====================================
+
+${headerTitle}
+Generated: ${generationTime}
+Study Version: 1.0
+
+YOUR COMPLETION CODE:
+${codeText}
+
+=====================================
+IMPORTANT INFORMATION:
+- This code proves you completed the entire study
+- Keep this file safe as backup
+- Use this code to complete your submission
+- If you're using MTurk, paste this code in the HIT submission form
+
+=====================================
+PAYMENT/COMPLETION ASSURANCE:
+If you encounter any technical issues with code submission, don't worry! 
+We have received your completion data and will process your payment/participation accordingly.
+
+For assistance, contact: irentala@myharrisburgu.com
+Include this completion code in your email for faster processing.
+
+=====================================
+Study: Multimodal Fake Profile Detection Research
+Institution: University of Harrisburg
+Date: ${new Date().toLocaleDateString()}
+Time: ${new Date().toLocaleTimeString()}
+
+=====================================
+For support, contact: irentala@myharrisburgu.com
+=====================================`;
+
+        // Create filename with timestamp
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        const filename = `Survey_Completion_Code_${timestamp}.txt`;
+
+        const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // Show success feedback
+        saveButton.textContent = '✅ Saved!';
+        saveButton.disabled = true;
+        setTimeout(() => {
+          saveButton.textContent = isMTurkSession ? '💾 Save Code Locally' : '💾 Save Code Locally';
+          saveButton.disabled = false;
+        }, 2000);
+
+        // Show success message
+        const successDiv = document.getElementById('successDiv');
+        successDiv.innerHTML = `<p>✅ Survey code saved locally as "${filename}"</p>`;
+        successDiv.style.display = 'block';
+        
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+          successDiv.style.display = 'none';
+        }, 5000);
       }
 
       function submitToMTurk() {
