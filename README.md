@@ -196,14 +196,17 @@ promptly.
 You may substitute your own video stimuli:
 
 1. Remove the existing files from `pages/hosting/videos/`
-2. Place exactly 3 `.mp4` files in `pages/hosting/videos/`
+2. Place exactly 3 `.mp4` files in `pages/hosting/videos/` (any filenames)
 3. Run the update script:
    ```bash
    bash update-videos.sh
    ```
-   The script will detect your video files, prompt you for a short display
-   label for each (e.g., "Watch Funny Cat Video"), then automatically update
-   `utils/common.js` and `scripts/tasks-controller.js`.
+   The script will:
+   - List the detected video files
+   - Let you assign each file to video 1, 2, or 3 (this controls the
+     presentation order — video 1 is shown first in each round)
+   - Prompt for a short display label for each (e.g., "Watch Funny Cat Video")
+   - Automatically update `utils/common.js` and `scripts/tasks-controller.js`
 
 **Tip:** Choose videos that elicit distinct emotional responses (e.g.,
 inspirational, shocking, political) to maximize variance in typing behavior.

@@ -7,12 +7,11 @@
 #   2. Run: bash update-videos.sh
 #
 # The script will:
-#   - Detect the 3 video files (sorted alphabetically)
-#   - Prompt you for a short display label for each (e.g., "Watch Funny Cat Video")
+#   - Detect the 3 video files
+#   - Let you assign each to video 1, 2, or 3 (controls presentation order)
+#   - Prompt you for a short display label for each
 #   - Update CONFIG.VIDEOS in utils/common.js
 #   - Regenerate the task array in scripts/tasks-controller.js
-#
-# Video order matters: video 1/2/3 map to videoNumber 1/2/3 in the task array.
 
 set -euo pipefail
 
@@ -27,14 +26,14 @@ if [[ ! -d "$VIDEOS_DIR" ]]; then
   exit 1
 fi
 
-VIDEO_FILES=()
+ALL_FILES=()
 while IFS= read -r f; do
-  VIDEO_FILES+=("$f")
+  ALL_FILES+=("$f")
 done < <(find "$VIDEOS_DIR" -maxdepth 1 -name "*.mp4" -exec basename {} \; | sort)
 
-if [[ ${#VIDEO_FILES[@]} -ne 3 ]]; then
-  echo "Error: Expected exactly 3 .mp4 files in $VIDEOS_DIR, found ${#VIDEO_FILES[@]}:"
-  for f in "${VIDEO_FILES[@]}"; do
+if [[ ${#ALL_FILES[@]} -ne 3 ]]; then
+  echo "Error: Expected exactly 3 .mp4 files in $VIDEOS_DIR, found ${#ALL_FILES[@]}:"
+  for f in "${ALL_FILES[@]}"; do
     echo "  $f"
   done
   exit 1
@@ -42,16 +41,65 @@ fi
 
 echo "=== Found videos ==="
 for i in 0 1 2; do
-  echo "  Video $((i+1)): ${VIDEO_FILES[$i]}"
+  echo "  [$(( i + 1 ))] ${ALL_FILES[$i]}"
 done
 echo ""
+
+# --- Assign order ---
+
+echo "Assign each video to a position (1, 2, 3)."
+echo "Video 1 is shown first, video 2 second, video 3 third."
+echo ""
+
+ORDERED_FILES=("" "" "")
+USED=()
+
+for slot in 1 2 3; do
+  while true; do
+    echo "Available:"
+    for i in 0 1 2; do
+      # Check if already used
+      skip=false
+      for u in "${USED[@]+"${USED[@]}"}"; do
+        if [[ "$u" == "$i" ]]; then skip=true; break; fi
+      done
+      if [[ "$skip" == "false" ]]; then
+        echo "  [$(( i + 1 ))] ${ALL_FILES[$i]}"
+      fi
+    done
+
+    read -rp "Which file for video ${slot}? Enter number [1-3]: " choice
+    idx=$(( choice - 1 ))
+
+    # Validate
+    if [[ $idx -lt 0 || $idx -gt 2 ]]; then
+      echo "  Invalid choice. Enter 1, 2, or 3."
+      continue
+    fi
+
+    already_used=false
+    for u in "${USED[@]+"${USED[@]}"}"; do
+      if [[ "$u" == "$idx" ]]; then already_used=true; break; fi
+    done
+    if [[ "$already_used" == "true" ]]; then
+      echo "  That file is already assigned. Pick another."
+      continue
+    fi
+
+    ORDERED_FILES[$((slot - 1))]="${ALL_FILES[$idx]}"
+    USED+=("$idx")
+    echo "  Video ${slot} = ${ALL_FILES[$idx]}"
+    echo ""
+    break
+  done
+done
 
 # --- Get labels ---
 
 LABELS=()
 for i in 0 1 2; do
-  # Generate a default label from filename (strip extension, replace underscores/hyphens)
-  default_label="${VIDEO_FILES[$i]%.mp4}"
+  # Generate a default label from filename
+  default_label="${ORDERED_FILES[$i]%.mp4}"
   default_label="${default_label//_/ }"
   default_label="${default_label//-/ }"
 
@@ -64,9 +112,9 @@ for i in 0 1 2; do
 done
 
 echo ""
-echo "=== Configuration ==="
+echo "=== Final Configuration ==="
 for i in 0 1 2; do
-  echo "  Video $((i+1)): ${VIDEO_FILES[$i]}"
+  echo "  Video $((i+1)): ${ORDERED_FILES[$i]}"
   echo "    Label: ${LABELS[$i]}"
 done
 echo ""
@@ -81,17 +129,15 @@ fi
 echo ""
 echo "Updating $COMMON_JS ..."
 
-# Build replacement block in a temp file
 TMPFILE=$(mktemp)
 cat > "$TMPFILE" <<VIDEOF
   VIDEOS: {
-    VIDEO_1: 'videos/${VIDEO_FILES[0]}',
-    VIDEO_2: 'videos/${VIDEO_FILES[1]}',
-    VIDEO_3: 'videos/${VIDEO_FILES[2]}'
+    VIDEO_1: 'videos/${ORDERED_FILES[0]}',
+    VIDEO_2: 'videos/${ORDERED_FILES[1]}',
+    VIDEO_3: 'videos/${ORDERED_FILES[2]}'
   },
 VIDEOF
 
-# Use perl to replace the VIDEOS block
 perl -0777 -i -pe '
   BEGIN {
     open(my $fh, "<", "'"$TMPFILE"'") or die;
@@ -112,7 +158,6 @@ PLATFORMS=("Facebook" "Instagram" "Twitter")
 PLATFORM_CLASSES=("facebook" "instagram" "twitter")
 PLATFORM_CONFIGS=("FACEBOOK" "INSTAGRAM" "TWITTER")
 
-# Build the new tasks array in a temp file
 TMPFILE=$(mktemp)
 {
   echo "  tasks: ["
@@ -124,14 +169,13 @@ TMPFILE=$(mktemp)
     fi
     for v in 0 1 2; do
       for p in 0 1 2; do
-        video_path="videos/${VIDEO_FILES[$v]}"
+        video_path="videos/${ORDERED_FILES[$v]}"
         label="${LABELS[$v]}"
         platform="${PLATFORMS[$p]}"
         platform_class="${PLATFORM_CLASSES[$p]}"
         platform_config="${PLATFORM_CONFIGS[$p]}"
         video_num=$((v + 1))
 
-        # Determine if this is the last entry (round 2, video 3, platform Twitter)
         if [[ $round -eq 2 && $v -eq 2 && $p -eq 2 ]]; then
           trailing=""
         else
@@ -155,7 +199,6 @@ TMPFILE=$(mktemp)
   echo "  ],"
 } > "$TMPFILE"
 
-# Use perl to replace the tasks array
 perl -0777 -i -pe '
   BEGIN {
     open(my $fh, "<", "'"$TMPFILE"'") or die;
