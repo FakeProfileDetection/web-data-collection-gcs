@@ -193,26 +193,17 @@ promptly.
 
 ### Replacing Videos
 
-You may substitute your own video stimuli. To do so:
+You may substitute your own video stimuli:
 
-1. Place your `.mp4` files in `pages/hosting/videos/`
-2. Update the file paths in `scripts/tasks-controller.js` — each video appears
-   6 times in the task array (3 platforms x 2 rounds). Search for the current
-   filename and replace all occurrences:
-   ```javascript
-   // Example: replacing video 1
-   video: "videos/your-new-video-1.mp4",
+1. Remove the existing files from `pages/hosting/videos/`
+2. Place exactly 3 `.mp4` files in `pages/hosting/videos/`
+3. Run the update script:
+   ```bash
+   bash update-videos.sh
    ```
-3. Update the `CONFIG.VIDEOS` object in `utils/common.js`:
-   ```javascript
-   VIDEOS: {
-     VIDEO_1: 'videos/your-new-video-1.mp4',
-     VIDEO_2: 'videos/your-new-video-2.mp4',
-     VIDEO_3: 'videos/your-new-video-3.mp4'
-   },
-   ```
-4. Update the task labels (the `task:` field) in `tasks-controller.js` to
-   describe your new videos.
+   The script will detect your video files, prompt you for a short display
+   label for each (e.g., "Watch Funny Cat Video"), then automatically update
+   `utils/common.js` and `scripts/tasks-controller.js`.
 
 **Tip:** Choose videos that elicit distinct emotional responses (e.g.,
 inspirational, shocking, political) to maximize variance in typing behavior.

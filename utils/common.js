@@ -286,10 +286,11 @@ const CONFIG = {
   },
   
   VIDEOS: {
-    CARTER: 'videos/Coach Carter (6_9) Movie CLIP - Our Deepest Fear (2005) HD.mp4',
-    OSCARS: 'videos/Watch the uncensored moment Will Smith smacks Chris Rock on stage at the Oscars, drops F-bomb.mp4',
-    TRUMP: 'videos/TrumpandVancecallZelenskyydisrespectfulinOvalOfficemeeting.mp4'
+    VIDEO_1: 'videos/coach-carter-our-deepest-fear-2005.mp4',
+    VIDEO_2: 'videos/trump-vance-zelenskyy-oval-office-2025.mp4',
+    VIDEO_3: 'videos/will-smith-chris-rock-oscars-2022.mp4'
   },
+
   
   API: {
      BASE_URL: 'YOUR_CLOUD_FUNCTION_URL', // TODO: Replace with your deployed Cloud Function URL

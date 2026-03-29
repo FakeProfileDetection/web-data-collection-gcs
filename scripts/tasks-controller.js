@@ -13,8 +13,8 @@ const TasksController = {
     {
       platform: "Facebook",
       platformClass: "facebook",
-      task: "Watch Coach Carter Movie Clip",
-      video: "videos/Coach Carter (6_9) Movie CLIP - Our Deepest Fear (2005) HD.mp4",
+      task: "Watch Coach Carter — Our Deepest Fear",
+      video: "videos/coach-carter-our-deepest-fear-2005.mp4",
       link: CONFIG.PLATFORMS.FACEBOOK.url,
       platformId: CONFIG.PLATFORMS.FACEBOOK.id,
       videoNumber: 1,
@@ -23,8 +23,8 @@ const TasksController = {
     {
       platform: "Instagram",
       platformClass: "instagram",
-      task: "Watch Coach Carter Movie Clip",
-      video: "videos/Coach Carter (6_9) Movie CLIP - Our Deepest Fear (2005) HD.mp4",
+      task: "Watch Coach Carter — Our Deepest Fear",
+      video: "videos/coach-carter-our-deepest-fear-2005.mp4",
       link: CONFIG.PLATFORMS.INSTAGRAM.url,
       platformId: CONFIG.PLATFORMS.INSTAGRAM.id,
       videoNumber: 1,
@@ -33,8 +33,8 @@ const TasksController = {
     {
       platform: "Twitter",
       platformClass: "twitter",
-      task: "Watch Coach Carter Movie Clip",
-      video: "videos/Coach Carter (6_9) Movie CLIP - Our Deepest Fear (2005) HD.mp4",
+      task: "Watch Coach Carter — Our Deepest Fear",
+      video: "videos/coach-carter-our-deepest-fear-2005.mp4",
       link: CONFIG.PLATFORMS.TWITTER.url,
       platformId: CONFIG.PLATFORMS.TWITTER.id,
       videoNumber: 1,
@@ -43,8 +43,8 @@ const TasksController = {
     {
       platform: "Facebook",
       platformClass: "facebook",
-      task: "Watch The Oscar Slap Clip",
-      video: "videos/Watch the uncensored moment Will Smith smacks Chris Rock on stage at the Oscars, drops F-bomb.mp4",
+      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
+      video: "videos/trump-vance-zelenskyy-oval-office-2025.mp4",
       link: CONFIG.PLATFORMS.FACEBOOK.url,
       platformId: CONFIG.PLATFORMS.FACEBOOK.id,
       videoNumber: 2,
@@ -53,8 +53,8 @@ const TasksController = {
     {
       platform: "Instagram",
       platformClass: "instagram",
-      task: "Watch The Oscar Slap Clip",
-      video: "videos/Watch the uncensored moment Will Smith smacks Chris Rock on stage at the Oscars, drops F-bomb.mp4",
+      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
+      video: "videos/trump-vance-zelenskyy-oval-office-2025.mp4",
       link: CONFIG.PLATFORMS.INSTAGRAM.url,
       platformId: CONFIG.PLATFORMS.INSTAGRAM.id,
       videoNumber: 2,
@@ -63,8 +63,8 @@ const TasksController = {
     {
       platform: "Twitter",
       platformClass: "twitter",
-      task: "Watch The Oscar Slap Clip",
-      video: "videos/Watch the uncensored moment Will Smith smacks Chris Rock on stage at the Oscars, drops F-bomb.mp4",
+      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
+      video: "videos/trump-vance-zelenskyy-oval-office-2025.mp4",
       link: CONFIG.PLATFORMS.TWITTER.url,
       platformId: CONFIG.PLATFORMS.TWITTER.id,
       videoNumber: 2,
@@ -73,8 +73,8 @@ const TasksController = {
     {
       platform: "Facebook",
       platformClass: "facebook",
-      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
-      video: "videos/TrumpandVancecallZelenskyydisrespectfulinOvalOfficemeeting.mp4",
+      task: "Watch Will Smith / Chris Rock at the Oscars",
+      video: "videos/will-smith-chris-rock-oscars-2022.mp4",
       link: CONFIG.PLATFORMS.FACEBOOK.url,
       platformId: CONFIG.PLATFORMS.FACEBOOK.id,
       videoNumber: 3,
@@ -83,8 +83,8 @@ const TasksController = {
     {
       platform: "Instagram",
       platformClass: "instagram",
-      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
-      video: "videos/TrumpandVancecallZelenskyydisrespectfulinOvalOfficemeeting.mp4",
+      task: "Watch Will Smith / Chris Rock at the Oscars",
+      video: "videos/will-smith-chris-rock-oscars-2022.mp4",
       link: CONFIG.PLATFORMS.INSTAGRAM.url,
       platformId: CONFIG.PLATFORMS.INSTAGRAM.id,
       videoNumber: 3,
@@ -93,8 +93,8 @@ const TasksController = {
     {
       platform: "Twitter",
       platformClass: "twitter",
-      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
-      video: "videos/TrumpandVancecallZelenskyydisrespectfulinOvalOfficemeeting.mp4",
+      task: "Watch Will Smith / Chris Rock at the Oscars",
+      video: "videos/will-smith-chris-rock-oscars-2022.mp4",
       link: CONFIG.PLATFORMS.TWITTER.url,
       platformId: CONFIG.PLATFORMS.TWITTER.id,
       videoNumber: 3,
@@ -104,8 +104,8 @@ const TasksController = {
     {
       platform: "Facebook",
       platformClass: "facebook",
-      task: "Watch Coach Carter Movie Clip",
-      video: "videos/Coach Carter (6_9) Movie CLIP - Our Deepest Fear (2005) HD.mp4",
+      task: "Watch Coach Carter — Our Deepest Fear",
+      video: "videos/coach-carter-our-deepest-fear-2005.mp4",
       link: CONFIG.PLATFORMS.FACEBOOK.url,
       platformId: CONFIG.PLATFORMS.FACEBOOK.id,
       videoNumber: 1,
@@ -114,8 +114,8 @@ const TasksController = {
     {
       platform: "Instagram",
       platformClass: "instagram",
-      task: "Watch Coach Carter Movie Clip",
-      video: "videos/Coach Carter (6_9) Movie CLIP - Our Deepest Fear (2005) HD.mp4",
+      task: "Watch Coach Carter — Our Deepest Fear",
+      video: "videos/coach-carter-our-deepest-fear-2005.mp4",
       link: CONFIG.PLATFORMS.INSTAGRAM.url,
       platformId: CONFIG.PLATFORMS.INSTAGRAM.id,
       videoNumber: 1,
@@ -124,8 +124,8 @@ const TasksController = {
     {
       platform: "Twitter",
       platformClass: "twitter",
-      task: "Watch Coach Carter Movie Clip",
-      video: "videos/Coach Carter (6_9) Movie CLIP - Our Deepest Fear (2005) HD.mp4",
+      task: "Watch Coach Carter — Our Deepest Fear",
+      video: "videos/coach-carter-our-deepest-fear-2005.mp4",
       link: CONFIG.PLATFORMS.TWITTER.url,
       platformId: CONFIG.PLATFORMS.TWITTER.id,
       videoNumber: 1,
@@ -134,8 +134,8 @@ const TasksController = {
     {
       platform: "Facebook",
       platformClass: "facebook",
-      task: "Watch The Oscar Slap Clip",
-      video: "videos/Watch the uncensored moment Will Smith smacks Chris Rock on stage at the Oscars, drops F-bomb.mp4",
+      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
+      video: "videos/trump-vance-zelenskyy-oval-office-2025.mp4",
       link: CONFIG.PLATFORMS.FACEBOOK.url,
       platformId: CONFIG.PLATFORMS.FACEBOOK.id,
       videoNumber: 2,
@@ -144,8 +144,8 @@ const TasksController = {
     {
       platform: "Instagram",
       platformClass: "instagram",
-      task: "Watch The Oscar Slap Clip",
-      video: "videos/Watch the uncensored moment Will Smith smacks Chris Rock on stage at the Oscars, drops F-bomb.mp4",
+      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
+      video: "videos/trump-vance-zelenskyy-oval-office-2025.mp4",
       link: CONFIG.PLATFORMS.INSTAGRAM.url,
       platformId: CONFIG.PLATFORMS.INSTAGRAM.id,
       videoNumber: 2,
@@ -154,8 +154,8 @@ const TasksController = {
     {
       platform: "Twitter",
       platformClass: "twitter",
-      task: "Watch The Oscar Slap Clip",
-      video: "videos/Watch the uncensored moment Will Smith smacks Chris Rock on stage at the Oscars, drops F-bomb.mp4",
+      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
+      video: "videos/trump-vance-zelenskyy-oval-office-2025.mp4",
       link: CONFIG.PLATFORMS.TWITTER.url,
       platformId: CONFIG.PLATFORMS.TWITTER.id,
       videoNumber: 2,
@@ -164,8 +164,8 @@ const TasksController = {
     {
       platform: "Facebook",
       platformClass: "facebook",
-      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
-      video: "videos/TrumpandVancecallZelenskyydisrespectfulinOvalOfficemeeting.mp4",
+      task: "Watch Will Smith / Chris Rock at the Oscars",
+      video: "videos/will-smith-chris-rock-oscars-2022.mp4",
       link: CONFIG.PLATFORMS.FACEBOOK.url,
       platformId: CONFIG.PLATFORMS.FACEBOOK.id,
       videoNumber: 3,
@@ -174,8 +174,8 @@ const TasksController = {
     {
       platform: "Instagram",
       platformClass: "instagram",
-      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
-      video: "videos/TrumpandVancecallZelenskyydisrespectfulinOvalOfficemeeting.mp4",
+      task: "Watch Will Smith / Chris Rock at the Oscars",
+      video: "videos/will-smith-chris-rock-oscars-2022.mp4",
       link: CONFIG.PLATFORMS.INSTAGRAM.url,
       platformId: CONFIG.PLATFORMS.INSTAGRAM.id,
       videoNumber: 3,
@@ -184,14 +184,15 @@ const TasksController = {
     {
       platform: "Twitter",
       platformClass: "twitter",
-      task: "Watch Trump/Vance & Zelenskyy Oval Office Meeting",
-      video: "videos/TrumpandVancecallZelenskyydisrespectfulinOvalOfficemeeting.mp4",
+      task: "Watch Will Smith / Chris Rock at the Oscars",
+      video: "videos/will-smith-chris-rock-oscars-2022.mp4",
       link: CONFIG.PLATFORMS.TWITTER.url,
       platformId: CONFIG.PLATFORMS.TWITTER.id,
       videoNumber: 3,
       round: 2
     }
   ],
+
 
    // Initialize the controller
   init() {
