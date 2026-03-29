@@ -196,13 +196,21 @@ promptly.
 You may substitute your own video stimuli:
 
 1. Remove the existing files from `pages/hosting/videos/`
-2. Place exactly 3 `.mp4` files in `pages/hosting/videos/` (any filenames)
+2. Place exactly 3 `.mp4` files in `pages/hosting/videos/` (any filenames).
+   To pre-set the order, prefix filenames with numbers:
+   ```
+   pages/hosting/videos/
+   ├── 1-inspirational-speech.mp4    # shown first
+   ├── 2-political-debate.mp4        # shown second
+   └── 3-comedy-clip.mp4             # shown third
+   ```
 3. Run the update script:
    ```bash
    bash update-videos.sh
    ```
    The script will:
-   - List the detected video files
+   - List the detected video files (sorted alphabetically, so numbered
+     prefixes control the default order)
    - Let you assign each file to video 1, 2, or 3 (this controls the
      presentation order — video 1 is shown first in each round)
    - Prompt for a short display label for each (e.g., "Watch Funny Cat Video")
