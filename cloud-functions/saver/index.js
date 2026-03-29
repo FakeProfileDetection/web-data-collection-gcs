@@ -7,7 +7,7 @@ const path = require('path');
 
 // Initialize Cloud Storage
 const storage = new Storage();
-const BUCKET_NAME = 'fake-profile-detection-eda-bucket';
+const BUCKET_NAME = 'YOUR_GCS_BUCKET'; // TODO: Replace with your GCS bucket name
 const UPLOAD_PREFIX = 'uploads/';
 
 // Configuration
@@ -18,16 +18,8 @@ const ALLOWED_MIME_TYPES = [
   'text/plain'
 ];
 
-// CORS headers
-// const corsHeaders = {
-//   'Access-Control-Allow-Origin': '*', // TODO: Change to 'https://fakeprofiledetection.github.io'
-//   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-//   'Access-Control-Allow-Headers': 'Content-Type',
-//   'Access-Control-Max-Age': '3600'
-// };
-
 const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://fakeprofiledetection.github.io', // Use '*' for local hosting or testing
+  'Access-Control-Allow-Origin': 'YOUR_GITHUB_PAGES_URL', // TODO: Replace with your hosting URL. Use '*' for local testing
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Access-Control-Max-Age': '3600',

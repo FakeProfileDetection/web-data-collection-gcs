@@ -9,4 +9,4 @@ gcloud functions deploy saver \
   --region us-east1 \
   --memory 256MB \
   --timeout 120s \
-  --service-account web-data-collection-sa@fake-profile-detection-460117.iam.gserviceaccount.com
+  --service-account YOUR_SERVICE_ACCOUNT@YOUR_GCP_PROJECT_ID.iam.gserviceaccount.com

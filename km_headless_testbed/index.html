@@ -21,7 +21,7 @@
         const formData = new FormData();
         formData.append("file", file);
 
-        const res = await fetch("https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver", {
+        const res = await fetch("YOUR_CLOUD_FUNCTION_URL", { // TODO: Replace with your Cloud Function URL
           method: "POST",
           body: formData,
         });

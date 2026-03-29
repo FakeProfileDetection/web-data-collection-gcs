@@ -156,7 +156,7 @@ class APIClient {
 
       // Upload with timeout and retry logic
       const response = await this.fetchWithRetry(
-        'https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver',
+        CONFIG.API.BASE_URL,
         {
           method: 'POST',
           body: formData,
@@ -271,17 +271,17 @@ const CONFIG = {
     FACEBOOK: {
       id: 0,
       name: 'Facebook',
-      url: 'https://fakeprofiledetection.github.io/web-data-collection-gcs/pages/fake_pages/Facebook-Clone/index.html'
+      url: 'YOUR_GITHUB_PAGES_URL/pages/fake_pages/Facebook-Clone/index.html' // TODO: Replace YOUR_GITHUB_PAGES_URL
     },
     INSTAGRAM: {
       id: 1,
-      name: 'Instagram', 
-      url: 'https://fakeprofiledetection.github.io/web-data-collection-gcs/pages/fake_pages/instagram-clone/index.html'
+      name: 'Instagram',
+      url: 'YOUR_GITHUB_PAGES_URL/pages/fake_pages/instagram-clone/index.html' // TODO: Replace YOUR_GITHUB_PAGES_URL
     },
     TWITTER: {
       id: 2,
       name: 'Twitter',
-      url: 'https://fakeprofiledetection.github.io/web-data-collection-gcs/pages/fake_pages/twitter-clone/index.html'
+      url: 'YOUR_GITHUB_PAGES_URL/pages/fake_pages/twitter-clone/index.html' // TODO: Replace YOUR_GITHUB_PAGES_URL
     }
   },
   
@@ -292,7 +292,7 @@ const CONFIG = {
   },
   
   API: {
-     BASE_URL: 'https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver',
+     BASE_URL: 'YOUR_CLOUD_FUNCTION_URL', // TODO: Replace with your deployed Cloud Function URL
     TIMEOUT: 30000,
     MAX_RETRIES: 3
   },
@@ -1038,7 +1038,7 @@ const PlatformSubmissionHandler = {
     fd.append('file', fileBlob, filename);
 
     const res = await fetch(
-      'https://us-east1-fake-profile-detection-460117.cloudfunctions.net/saver',
+      CONFIG.API.BASE_URL,
       { method: 'POST', body: fd }
     );
 
